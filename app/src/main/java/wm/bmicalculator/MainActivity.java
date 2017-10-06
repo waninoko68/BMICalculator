@@ -1,5 +1,6 @@
 package wm.bmicalculator;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,18 +34,14 @@ public class MainActivity extends AppCompatActivity {
         cal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String heightText = eHeight.getText().toString();
-                Double height = Double.valueOf(heightText);
+                Double height = Double.valueOf(eHeight.getText().toString());
                 Double weight = Double.valueOf(eWeight.getText().toString());
-                Double bmi = weight/(height/100)*(height/100);
-                //Toast t = Toast.makeText(MainActivity.this,"BMI : "+String.valueOf(bmi),Toast.LENGTH_LONG);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                String bmiText = get_bmi_text(bmi);
-                dialog.setTitle("BMI Result");
-                bmi = (double)Math.round(bmi*100)/100;
-                dialog.setMessage(String.valueOf(bmi)+"\n"+bmiText);
-                dialog.setPositiveButton("OK",null);
-                dialog.show();
+                Double bmi = weight/((height/100.0)*(height/100.0));
+                String bmi_result = get_bmi_text(bmi);
+                Intent intent = new Intent(MainActivity.this,BmiResultActivity.class);
+                intent.putExtra("bmi_value",bmi);
+                intent.putExtra("bmi_result_text",bmi_result);
+                startActivity(intent);
             }
         });
 
@@ -54,19 +51,19 @@ public class MainActivity extends AppCompatActivity {
     {
         if(bmi<18.5)
         {
-            return "Underweight";
+            return "น้ำหนักน้อยกว่าปกติ (ผอม)";
         }
         else if(bmi<25)
         {
-            return "Healthy";
+            return "น้ำหนักปกติ (สมส่วน)";
         }
         else if(bmi<30)
         {
-            return "Overweight";
+            return "น้ำหนักมากกว่าปกติ (ท้วม)";
         }
         else
         {
-            return "Obese";
+            return "น้ำหนักมากกว่าปกติมาก (อ้วน)";
         }
     }
     /*private class myListener implements View.OnClickListener{
